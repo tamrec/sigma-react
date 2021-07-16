@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import classNames from 'classnames';
-
+import menu from './menu.js'
 const AppSubmenu = (props) => {
 
     const [activeIndex, setActiveIndex] = useState(null)
@@ -86,7 +86,7 @@ const AppSubmenu = (props) => {
 export const AppMenu = (props) => {
     return (
         <div className="layout-menu-container">
-            <AppSubmenu items={props.model} className="layout-menu" onMenuItemClick={props.onMenuItemClick} root={true} />
+            <AppSubmenu items={menu} className="layout-menu" onMenuItemClick={props.onMenuItemClick} root={true} />
         </div>
     );
 }
