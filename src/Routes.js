@@ -33,7 +33,10 @@ import { TextDemo } from './utilities/TextDemo';
 import { TypographyDemo } from './utilities/TypographyDemo';
 import { TimelineDemo } from './utilities/TimelineDemo';
 
-export default () => (
+
+import {Users} from 'corso';
+
+const Routes = () => (
   <div className="layout-main">
   <Route path="/" exact component={Dashboard} />
   <Route path="/formlayout" component={FormLayoutDemo} />
@@ -64,5 +67,9 @@ export default () => (
   <Route path="/crud" component={Crud} />
   <Route path="/empty" component={EmptyPage} />
   <Route path="/documentation" component={Documentation} />
+
+  <Route path="/users" component={Users} />
   </div>
 )
+
+export default Routes
