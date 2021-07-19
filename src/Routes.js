@@ -34,7 +34,7 @@ import { TypographyDemo } from './utilities/TypographyDemo';
 import { TimelineDemo } from './utilities/TimelineDemo';
 
 
-import {Users} from 'corso';
+import {Users, UsersLazy} from 'corso';
 
 const Routes = () => (
   <div className="layout-main">
@@ -69,6 +69,7 @@ const Routes = () => (
   <Route path="/documentation" component={Documentation} />
 
   <Route path="/users" component={Users} />
+  <Route path="/users-lazy" component={UsersLazy} />
   </div>
 )
 

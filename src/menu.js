@@ -4,6 +4,7 @@ const menu = [
     label: 'Corso', icon: 'pi pi-fw pi-clone',
     items: [
       { label: 'Utenti', icon: 'pi pi-fw pi-user-edit', to: '/users' },
+      { label: 'Utenti lazy', icon: 'pi pi-fw pi-user-edit', to: '/users-lazy' },
     ]
   },
   {
