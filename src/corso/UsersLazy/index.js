@@ -29,28 +29,48 @@ const Users = () => {
     )()
   }, [page]);
 
+  const EmailTemplate = header => rowData => (
+    <>
+      <span className="p-column-title">{header}</span>
+      <a href={'mailto:' + rowData.email}>{rowData.email}</a>
+    </>
+  )
+  const ResponsiveTemplate = header => rowData => (
+    <>
+    <span className="p-column-title">{header}</span>
+    {rowData.email}
+    </>
+  )
+
   return (
-    <DataTable
-      value={users}
-      selection={selectedUsers}
-      onSelectionChange={(e) => setSelectedUsers(e.value)}
-      first={0}
-      onPage={setPage}
-      dataKey="id"
-      paginator
-      lazy
-      totalRecords={totalRecords}
-      rows={page.rows}
-      rowsPerPageOptions={[5, 10, 25]}
-      className="datatable-responsive"
-      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      currentPageReportTemplate="Stai visualizzando dal record {first} al record {last} di {totalRecords} utenti"
-      emptyMessage="Non ci sono utenti."
-    >
-      <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-      <Column field="name" header="Name" sortable ></Column>
-      <Column field="email" header="Email" sortable ></Column>
-    </DataTable>
+    <div className="p-grid crud-demo">
+      <div className="p-col-12">
+        <div className="card">
+          <DataTable
+            value={users}
+            selection={selectedUsers}
+            onSelectionChange={(e) => setSelectedUsers(e.value)}
+            first={0}
+            onPage={setPage}
+            dataKey="id"
+            paginator
+            lazy
+            globalFilter="ann"
+            totalRecords={totalRecords}
+            rows={page.rows}
+            rowsPerPageOptions={[5, 10, 25]}
+            className="datatable-responsive"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            currentPageReportTemplate="Stai visualizzando dal record {first} al record {last} di {totalRecords} utenti"
+            emptyMessage="Non ci sono utenti."
+          >
+            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
+            <Column field="name" header="Name" sortable body={ResponsiveTemplate('Name')} ></Column>
+            <Column field="email" header="Email" sortable body={EmailTemplate('Email')}></Column>
+          </DataTable>
+        </div>
+      </div>
+    </div>
   )
 }
 export default Users
