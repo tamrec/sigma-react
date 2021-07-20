@@ -15,13 +15,14 @@ const { getUsers } = new UserService();
 
 const Users = () => {
   const [users, setUsers] = useState([])
+  const [selectedUsers, setSelectedUsers] = useState(null)
   const [page, setPage] = useState({ first: 0, rows: 5, page: 0, pageCount: 0 });
   const [totalRecords, setTotalRecords] = useState(0)
 
   useEffect(() => {
     (
       async () => {
-       const { data, totalRecords } = await getUsers(page.page, page.rows)
+        const { data, totalRecords } = await getUsers(page.page, page.rows)
         setUsers(data);
         setTotalRecords(totalRecords)
       }
@@ -29,28 +30,27 @@ const Users = () => {
   }, [page]);
 
   return (
-    <>
-      {JSON.stringify(page, null, 2)}
-      <DataTable
-        value={users}
-        first={0}
-        onPage={setPage}
-        dataKey="id"
-        paginator
-        lazy
-        totalRecords={totalRecords}
-        rows={page.rows}
-        rowsPerPageOptions={[2, 5, 10, 25]}
-        className="datatable-responsive"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
-        emptyMessage="No products found."
-      >
-        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-        <Column field="name" header="Name" sortable ></Column>
-        <Column field="email" header="Email" sortable footer="1000" ></Column>
-      </DataTable>
-    </>
+    <DataTable
+      value={users}
+      selection={selectedUsers}
+      onSelectionChange={(e) => setSelectedUsers(e.value)}
+      first={0}
+      onPage={setPage}
+      dataKey="id"
+      paginator
+      lazy
+      totalRecords={totalRecords}
+      rows={page.rows}
+      rowsPerPageOptions={[5, 10, 25]}
+      className="datatable-responsive"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+      currentPageReportTemplate="Stai visualizzando dal record {first} al record {last} di {totalRecords} utenti"
+      emptyMessage="Non ci sono utenti."
+    >
+      <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
+      <Column field="name" header="Name" sortable ></Column>
+      <Column field="email" header="Email" sortable ></Column>
+    </DataTable>
   )
 }
 export default Users
