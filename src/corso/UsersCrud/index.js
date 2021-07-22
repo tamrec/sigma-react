@@ -12,7 +12,7 @@ import { Rating } from 'primereact/rating';
 import { InputText } from 'primereact/inputtext';
 
 import { UserService } from './UserService';
-const { getUsers, createUser } = new UserService();
+const { getUsers, createUser, removeUser  } = new UserService();
 
 const Users = () => {
   const emptyUser = {
@@ -25,12 +25,15 @@ const Users = () => {
   const [selectedUsers, setSelectedUsers] = useState(null)
   const [page, setPage] = useState({ first: 0, rows: 5, page: 0, pageCount: 0 });
   const [totalRecords, setTotalRecords] = useState(0)
-
+  const [deleteUserDialog, setDeleteUserDialog] = useState(false);
+  const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
   const [userDialog, setUserDialog] = useState(false);
   const [user, setUser] = useState(emptyUser);
   const [submitted, setSubmitted] = useState(false);
+  const toast = useRef(null);
 
-  const updateUsersList = async() => {
+
+  const updateUsersList = async () => {
     const { data, totalRecords } = await getUsers(page.page, page.rows)
     setUsers(data);
     setTotalRecords(totalRecords)
@@ -39,17 +42,6 @@ const Users = () => {
   useEffect(() => {
     updateUsersList()
   }, [page]);
-
-  const leftToolbarTemplate = () => {
-    return (
-      <React.Fragment>
-        <Button label="New" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
-        {/* 
-            <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
-            */}
-      </React.Fragment>
-    )
-  }
 
   const openNew = () => {
     setUser(emptyUser);
@@ -65,16 +57,84 @@ const Users = () => {
   const saveUser = () => {
     setSubmitted(true);
     createUser(user)
-    updateUsersList()
     setUserDialog(false);
+    updateUsersList()
     setUser(emptyUser);
-    
+    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User created', life: 3000 });
+  }
+
+  const hideDeleteUserDialog = () => {
+    setDeleteUserDialog(false);
+  }
+
+  const hideDeleteUsersDialog = () => {
+    setDeleteUsersDialog(false);
+  }
+
+  const confirmDeleteUser = (user) => {
+    removeUser(user.id)
+    setUser(user);
+    setDeleteUserDialog(true);
+  }
+
+  const deleteUser = () => {
+    removeUser(user.id)
+    let _users = users.filter(val => val.id !== user.id);
+    setUsers(_users);
+    setDeleteUserDialog(false);
+    setUser(emptyUser);
+  }
+
+  const confirmDeleteSelected = (user) => {
+    setUser(user);
+    setDeleteUsersDialog(true);
+  }
+
+  const deleteSelectedUsers = () => {
+    selectedUsers.forEach(user => {
+      removeUser(user.id)
+    })
+    let _users = users.filter(val => !selectedUsers.includes(val));
+    setUsers(_users);
+    setDeleteUsersDialog(false);
+    setSelectedUsers(null);
+  }
+
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <div className="actions">
+        {/*<Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} />*/}
+        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteUser(rowData)} />
+      </div>
+    );
+  }
+
+  const leftToolbarTemplate = () => {
+    return (
+      <React.Fragment>
+        <Button label="New" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+        <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
+      </React.Fragment>
+    )
   }
 
   const userDialogFooter = (
     <>
       <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
       <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveUser} />
+    </>
+  );
+
+  const deleteUserDialogFooter = (
+    <>
+      <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUserDialog} />
+      <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteUser} />
+    </>
+  );
+  const deleteUsersDialogFooter = (
+    <>
+      <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUsersDialog} />
+      <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedUsers} />
     </>
   );
 
@@ -89,6 +149,7 @@ const Users = () => {
     <div className="p-grid crud-demo">
       <div className="p-col-12">
         <div className="card">
+          <Toast ref={toast} />
           <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
           <DataTable
             value={users}
@@ -110,6 +171,7 @@ const Users = () => {
             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
             <Column field="name" header="Name" sortable ></Column>
             <Column field="email" header="Email" sortable ></Column>
+            <Column body={actionBodyTemplate}></Column>
           </DataTable>
 
           <Dialog
@@ -129,6 +191,19 @@ const Users = () => {
             <div className="p-field">
               <label htmlFor="email">Email</label>
               <InputText id="email" value={user.email} onChange={(e) => onInputChange(e, 'email')} required rows={3} cols={20} />
+            </div>
+          </Dialog>
+          <Dialog visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+              {user && <span>Are you sure you want to delete <b>{user.name}</b>?</span>}
+            </div>
+          </Dialog>
+
+          <Dialog visible={deleteUsersDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+              {users && <span>Are you sure you want to delete the selected products?</span>}
             </div>
           </Dialog>
         </div>
