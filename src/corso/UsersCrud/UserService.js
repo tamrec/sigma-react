@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export class UserService {
- 
+
 
   getUsers(page, limit) {
     const url = `http://localhost:3000/users?_page=${page + 1}&_limit=${limit}`
@@ -18,4 +18,8 @@ export class UserService {
     return axios.delete(url).then(res => ({ data: res.data }))
   }
 
+  updateUser(user){
+      const url = `http://localhost:3000/users/${user.id}`
+      return axios.put(url, user).then(res => ({ data: res.data }))
+  }
 }
