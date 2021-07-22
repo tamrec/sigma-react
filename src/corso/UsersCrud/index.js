@@ -60,7 +60,7 @@ const Users = () => {
     setUserDialog(false);
     updateUsersList()
     setUser(emptyUser);
-    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User created', life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utente creato', life: 3000 });
   }
 
   const hideDeleteUserDialog = () => {
@@ -83,6 +83,7 @@ const Users = () => {
     setUsers(_users);
     setDeleteUserDialog(false);
     setUser(emptyUser);
+    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utente rimosso', life: 3000 });
   }
 
   const confirmDeleteSelected = (user) => {
@@ -98,6 +99,7 @@ const Users = () => {
     setUsers(_users);
     setDeleteUsersDialog(false);
     setSelectedUsers(null);
+    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utenti rimossi', life: 3000 });
   }
 
   const actionBodyTemplate = (rowData) => {
@@ -142,7 +144,6 @@ const Users = () => {
     const val = (e.target && e.target.value) || '';
     let _user = { ...user };
     _user[`${name}`] = val;
-
     setUser(_user);
   }
   return (
