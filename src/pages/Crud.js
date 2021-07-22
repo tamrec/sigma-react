@@ -216,7 +216,7 @@ export const Crud = () => {
     const priceBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Pr-ice</span>
+                <span className="p-column-title">Price</span>
                 {formatCurrency(rowData.price)}
             </>
         );

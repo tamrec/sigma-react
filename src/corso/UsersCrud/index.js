@@ -139,6 +139,24 @@ export const Users = () => {
         )
     }
 
+    const nameBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Name</span>
+                {rowData.name}
+            </>
+        );
+    }
+
+    const emailBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Email</span>
+                {rowData.email}
+            </>
+        );
+    }
+
     const userDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog}/>
@@ -189,8 +207,8 @@ export const Users = () => {
                         emptyMessage="Non ci sono utenti."
                     >
                         <Column selectionMode="multiple" headerStyle={{width: '3rem'}}></Column>
-                        <Column field="name" header="Name" sortable></Column>
-                        <Column field="email" header="Email" sortable></Column>
+                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
+                        <Column field="email" header="Email" sortable body={emailBodyTemplate}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
