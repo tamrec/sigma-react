@@ -34,6 +34,7 @@ export const Users = () => {
     const [user, setUser] = useState(emptyUser);
     const [submitted, setSubmitted] = useState(false);
     const [modified, setModified] = useState(false);
+    const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'category', order: -1 }]);
     const toast = useRef(null);
 
 
@@ -45,7 +46,7 @@ export const Users = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const {data, totalRecords} = await getUsers( page.page, page.rows)
+            const {data, totalRecords} = await getUsers(page.page, page.rows)
             setUsers(data)
             setTotalRecords(totalRecords)
         }
@@ -193,6 +194,10 @@ export const Users = () => {
                     <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
                     <DataTable
                         value={users}
+                        sortMode="multiple"
+                        removableSort
+                        multiSortMeta={multiSortMeta}
+                        onSort={(e) => setMultiSortMeta(e.multiSortMeta)}
                         selection={selectedUsers}
                         onSelectionChange={(e) => setSelectedUsers(e.value)}
                         first={page.first}
@@ -209,8 +214,8 @@ export const Users = () => {
                         emptyMessage="Non ci sono utenti."
                     >
                         <Column selectionMode="multiple" headerStyle={{width: '3rem'}}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                        <Column field="email" header="Email" sortable body={emailBodyTemplate}></Column>
+                        <Column field="name" header="Name" body={nameBodyTemplate} sortable></Column>
+                        <Column field="email" header="Email" body={emailBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
