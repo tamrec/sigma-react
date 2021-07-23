@@ -45,7 +45,7 @@ export const Users = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const {data, totalRecords} = await getUsers("`http://localhost:3000/users", page.page, page.rows)
+            const {data, totalRecords} = await getUsers( page.page, page.rows)
             setUsers(data)
             setTotalRecords(totalRecords)
         }
