@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import classNames from 'classnames';
 
+import * as yup from 'yup';
+import {userSchema} from "../../Validation/UserValidation";
 import {Toast} from 'primereact/toast';
 import {Button} from 'primereact/button';
 import {FileUpload} from 'primereact/fileupload';
@@ -43,7 +45,7 @@ export const Users = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const { data, totalRecords } = await getUsers("`http://localhost:3000/users", page.page, page.rows)
+            const {data, totalRecords} = await getUsers("`http://localhost:3000/users", page.page, page.rows)
             setUsers(data)
             setTotalRecords(totalRecords)
         }
@@ -193,7 +195,7 @@ export const Users = () => {
                         value={users}
                         selection={selectedUsers}
                         onSelectionChange={(e) => setSelectedUsers(e.value)}
-                        first={0}
+                        first={page.first}
                         onPage={setPage}
                         dataKey="id"
                         paginator
